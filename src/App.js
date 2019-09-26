@@ -1,24 +1,20 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import "./App.css";
+import DisplayAllProducts from "./components/displayAllProducts";
+import { Route, Switch, Redirect } from "react-router-dom";
+import ProductPage from "./components/productPage";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="container" align="middle">
+      <Switch>
+        <Route
+          path="/product/:id"
+          render={props => <ProductPage {...props} />}
+        />
+        <Route path="/allProducts" component={DisplayAllProducts}></Route>
+        <Redirect path="/" exact to="/allProducts"></Redirect>
+      </Switch>
     </div>
   );
 }
