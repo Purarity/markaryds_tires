@@ -1,4 +1,4 @@
-const tires = [
+let tires = [
   {
     id: "179ae8c3-c3f0-4bf9-9e14-998fa7ae32e6",
     name: "MICHELIN",
@@ -65,8 +65,17 @@ export function getProduct(id) {
   return tires.find(m => m.id === id);
 }
 
+export function deleteProduct(id) {
+  const updatedProductList = tires.filter(t => t.id !== id);
+  tires = updatedProductList;
+  return updatedProductList;
+}
+
 export async function saveProduct(product) {
   let productInDb = tires.find(p => p.id === product.id) || {};
+  if (!productInDb.id) {
+    return tires.push(product);
+  }
   productInDb.name = product.name;
   productInDb.description = product.description;
   productInDb.price = product.price;

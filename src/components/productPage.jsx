@@ -1,5 +1,4 @@
 import React from "react";
-import axios from "axios";
 import Joi from "joi-browser";
 import Form from "./common/form";
 import { getProduct, saveProduct } from "../api/fakeApi";
@@ -7,10 +6,11 @@ import { getProduct, saveProduct } from "../api/fakeApi";
 class movieForm extends Form {
   state = {
     data: {
-      title: "",
-      genreId: "",
-      numberInStock: "",
-      dailyRentalRate: ""
+      id: "",
+      name: "",
+      description: "",
+      stock: "",
+      price: ""
     },
     errors: {}
   };
@@ -37,7 +37,9 @@ class movieForm extends Form {
     name: Joi.string()
       .required()
       .label("Name"),
-    description: Joi.required().label("Description"),
+    description: Joi.string()
+      .required()
+      .label("Description"),
     stock: Joi.number()
       .min(0)
       .max(100)
@@ -66,9 +68,11 @@ class movieForm extends Form {
   };
 
   render() {
+    const id = this.props.match.params.id;
     return (
       <React.Fragment>
         <h1>Product Form</h1>
+        {id === "new" ? this.renderInput("id", "id") : null}
         {this.renderInput("name", "Name")}
         {this.renderInput("description", "Description")}
         {this.renderInput("stock", "Stock")}
