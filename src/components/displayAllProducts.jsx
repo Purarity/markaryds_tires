@@ -31,15 +31,16 @@ class DisplayAllProducts extends Component {
   };
 
   handleSearch = searchQuery => {
-    this.setState({ searchQuery });
+    this.setState({ searchQuery, selectedGroup: "All Prices" });
   };
 
   handleGroupSelect = group => {
-    group.range === "All Prices"
-      ? this.setState({ selectedGroup: "All Prices" })
-      : this.setState({ selectedGroup: group.range });
-
-    this.setState({ currentPage: 1, searchQuery: "" });
+    this.setState({ selectedGroup: group.range });
+    this.setState({
+      currentPage: 1,
+      searchQuery: "",
+      selectedGroup: group.range
+    });
   };
 
   getVisibleProducts = () => {
