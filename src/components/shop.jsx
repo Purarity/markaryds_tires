@@ -5,7 +5,7 @@ import Table from "./common/table";
 import SearchBox from "./common/searchBox";
 import ListGroup from "./common/listGroup";
 
-class DisplayAllProducts extends Component {
+class Shop extends Component {
   state = {
     data: [],
     searchQuery: "",
@@ -24,23 +24,6 @@ class DisplayAllProducts extends Component {
     ];
     this.setState({ data: getTiresList(), priceGroups });
   }
-
-  handleDelete = productId => {
-    const updatedList = deleteItem(productId);
-    this.setState({ data: updatedList });
-  };
-
-  deleteButton = itemId => {
-    return (
-      <button
-        type="button"
-        className="btn btn-danger"
-        onClick={() => this.handleDelete(itemId)}
-      >
-        Delete
-      </button>
-    );
-  };
 
   handleSearch = searchQuery => {
     this.setState({ searchQuery, selectedGroup: "All Prices" });
@@ -95,11 +78,11 @@ class DisplayAllProducts extends Component {
           break;
         //#endregion
       }
-      return displayedProducts;
     }
     return displayedProducts;
   };
 
+  handleBook = itemId => {};
   render() {
     const { searchQuery, priceGroups, selectedGroup } = this.state;
     const productsColumns = [
@@ -109,14 +92,14 @@ class DisplayAllProducts extends Component {
       { path: "price", label: "Price" },
       { path: "stock", label: "Stock" },
       {
-        key: "delete",
+        key: "book",
         handleObjectProperty: item => (
           <button
             type="button"
-            className="btn btn-danger"
-            onClick={() => this.handleDelete(item.id)}
+            className="btn btn-primary"
+            onClick={() => this.handleBook(item.id)}
           >
-            Delete
+            <Link to={`/shop/${item.id}`}>Book</Link>
           </button>
         )
       }
@@ -125,14 +108,7 @@ class DisplayAllProducts extends Component {
     return (
       <React.Fragment>
         <div className="p-3">
-          <div className="row">
-            <Link to="/product/new" className="btn btn-primary">
-              New Product
-            </Link>
-            <div className="col">
-              <SearchBox value={searchQuery} onChange={this.handleSearch} />
-            </div>
-          </div>
+          <SearchBox value={searchQuery} onChange={this.handleSearch} />
           <div>
             <div className="pt-2" align="left">
               <div className="row">
@@ -146,6 +122,7 @@ class DisplayAllProducts extends Component {
           </div>
         </div>
         <Table
+          noLinks={true}
           columns={productsColumns}
           data={products}
           onDelete={this.handleDelete}
@@ -155,4 +132,4 @@ class DisplayAllProducts extends Component {
   }
 }
 
-export default DisplayAllProducts;
+export default Shop;

@@ -3,39 +3,30 @@ import { Link } from "react-router-dom";
 
 class Table extends Component {
   render() {
-    const tableColumns = [
-      { path: "img", label: "Image" },
-      { path: "name", label: "Name" },
-      { path: "description", label: "Description" },
-      { path: "price", label: "Price" },
-      { path: "stock", label: "Stock" },
-      { path: "delete", label: "" }
-    ];
-    const { data } = this.props;
+    const { data, columns } = this.props;
     return (
       <table className="table">
         <thead>
           <tr>
-            {tableColumns.map(header => {
-              return <th key={header.path}>{header.label}</th>;
+            {columns.map(column => {
+              return <th key={column.path || column.key}>{column.label}</th>;
             })}
           </tr>
         </thead>
         <tbody>
           {data.map(item => {
-            return this.renderCell(item, tableColumns);
+            return this.renderCell(item, columns);
           })}
         </tbody>
       </table>
     );
   }
 
-  renderCell(item, tableColumns) {
-    const { onDelete } = this.props;
+  renderCell(item, columns) {
     return (
       <tr key={item.id}>
-        {tableColumns.map(cell => {
-          if (cell.path === "img") {
+        {columns.map(column => {
+          if (column.path === "img") {
             let img;
             try {
               img = require(`../../imgs/${item.id}.jpg`);
@@ -48,31 +39,29 @@ class Table extends Component {
                   src={img}
                   className="img-fluid"
                   alt={img}
-                  width="128"
-                  height="128"
+                  width="64"
+                  height="64"
                 ></img>
               </td>
             );
-          } else if (cell.path === "name") {
+          } else if (column.path === "name") {
             return (
-              <td key={cell.path}>
-                <Link to={`/product/${item.id}`}>{item.name}</Link>
+              <td key={column.path}>
+                {this.props.noLinks ? (
+                  item.name
+                ) : (
+                  <Link to={`/product/${item.id}`}>{item.name}</Link>
+                )}
               </td>
             );
-          } else if (cell.path === "delete") {
+          } else if (column.key) {
             return (
-              <td key={cell.path + item.id}>
-                <button
-                  type="button"
-                  className="btn btn-danger"
-                  onClick={() => onDelete(item.id)}
-                >
-                  Delete
-                </button>
+              <td key={(column.path || column.key) + item._id}>
+                {column.handleObjectProperty(item)}
               </td>
             );
           } else {
-            return <td key={cell.path}>{item[cell.path]}</td>;
+            return <td key={column.path}>{item[column.path]}</td>;
           }
         })}
       </tr>

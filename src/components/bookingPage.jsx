@@ -1,16 +1,18 @@
 import React from "react";
 import Joi from "joi-browser";
 import Form from "./common/form";
-import { getProduct, saveProduct } from "../api/fakeApi";
+import { getProduct, saveReservation } from "../api/fakeApi";
 
-class movieForm extends Form {
+class BookingPage extends Form {
   state = {
     data: {
       id: "",
       name: "",
+      shopperName: "",
       description: "",
       stock: "",
-      price: ""
+      price: "",
+      notes: ""
     },
     errors: {}
   };
@@ -37,6 +39,9 @@ class movieForm extends Form {
     name: Joi.string()
       .required()
       .label("Name"),
+    shopperName: Joi.string()
+      .required()
+      .label("Name"),
     description: Joi.string()
       .required()
       .label("Description"),
@@ -49,7 +54,11 @@ class movieForm extends Form {
       .min(0)
       .max(2000)
       .required()
-      .label("Price")
+      .label("Price"),
+    notes: Joi.string()
+      .label("Notes")
+      .min(0)
+      .max(2000)
   };
 
   mapToViewModel = product => {
@@ -63,24 +72,26 @@ class movieForm extends Form {
   };
 
   doSubmit = () => {
-    this.props.history.push("/admin/allProducts");
-    saveProduct(this.state.data);
+    saveReservation(this.state.data);
+    this.props.history.push("/shop");
   };
 
   render() {
     const id = this.props.match.params.id;
+    const { data } = this.state;
     return (
       <React.Fragment>
         <h1>Product Form</h1>
-        {id === "new" ? this.renderInput("id", "id") : null}
-        {this.renderInput("name", "Name")}
-        {this.renderInput("description", "Description")}
-        {this.renderInput("stock", "Stock")}
-        {this.renderInput("price", "Price")}
-        {this.renderButton("Save", this.doSubmit)}
+        <div>Product Name: {data.name} </div>
+        <div>Product Descriptions: {data.description} </div>
+        <div>Product Stock: {data.stock} </div>
+        <div>Product Price: {data.price} </div>
+        {this.renderInput("shopperName", "Name:")}
+        {this.renderInput("notes", "Notes to workshop:")}
+        {this.renderButton("Order", this.doSubmit)}
       </React.Fragment>
     );
   }
 }
 
-export default movieForm;
+export default BookingPage;

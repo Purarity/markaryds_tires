@@ -12,6 +12,7 @@ const ListGroup = ({ groups, onGroupSelect, selectedGroup }) => {
             key={price.range}
             className={classes}
             onClick={() => onGroupSelect(price)}
+            style={{ cursor: "default" }}
           >
             {price.range}
           </li>
