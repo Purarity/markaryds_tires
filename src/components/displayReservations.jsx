@@ -1,5 +1,9 @@
 import React, { Component } from "react";
-import { deleteItem, getReservations } from "../api/fakeApi";
+import _ from "lodash";
+import {
+  deleteItem,
+  getReservations
+} from "../api/fakeApi";
 import Table from "./common/table";
 import SearchBox from "./common/searchBox";
 
@@ -19,7 +23,10 @@ class DisplayReservations extends Component {
   };
 
   handleSearch = searchQuery => {
-    this.setState({ searchQuery, selectedGroup: "All Prices" });
+    this.setState({
+      searchQuery,
+      selectedGroup: "All Prices"
+    });
   };
 
   getVisibleOrders = () => {
@@ -27,7 +34,9 @@ class DisplayReservations extends Component {
     let displayedOrders;
     if (searchQuery) {
       displayedOrders = data.filter(product =>
-        product.name.toLowerCase().includes(searchQuery.toLowerCase())
+        product.name
+          .toLowerCase()
+          .includes(searchQuery.toLowerCase())
       );
     } else {
       displayedOrders = data;
@@ -35,13 +44,76 @@ class DisplayReservations extends Component {
     return displayedOrders;
   };
 
+  handleBetalningButton = (id, property) => {
+    const { data } = this.state;
+    const reservations = [...data];
+    const index = _.findIndex(data, { id: id });
+    const path = [index, "betalning", property];
+    _.set(reservations, path, !_.get(reservations, path));
+    if (!_.get(reservations, path)) {
+      _.set(
+        reservations,
+        [index, "betalning", "betald"],
+        false
+      );
+    }
+    this.setState({ data: reservations });
+  };
+
   render() {
     const { searchQuery } = this.state;
     const productsColumns = [
       { path: "id", label: "#" },
       { path: "name", label: "Name" },
-      { path: "descriptions", label: "Descriptions" }
-      // ,{ path: "betalning", label: "Betalning" }
+      { path: "productId", label: "Product Id" },
+      { path: "notes", label: "Notes" },
+      {
+        key: "betalning",
+        label: "Betalning",
+        renderObjectProperty: reservation => {
+          const faktureradClassName = "mr-3 btn btn-".concat(
+            reservation.betalning.fakturerad
+              ? "info"
+              : "outline-info"
+          );
+          const betaldClassName = "btn btn-".concat(
+            reservation.betalning.betald
+              ? "success"
+              : "outline-success"
+          );
+          return (
+            <div>
+              <button
+                type="button"
+                className={faktureradClassName}
+                style={{ cursor: "default" }}
+                onClick={() => {
+                  this.handleBetalningButton(
+                    reservation.id,
+                    "fakturerad"
+                  );
+                }}
+              >
+                Fakturerad
+              </button>
+              <button
+                type="button"
+                className={betaldClassName}
+                style={{ cursor: "default" }}
+                disabled={!reservation.betalning.fakturerad}
+                onClick={() => {
+                  this.handleBetalningButton(
+                    reservation.id,
+                    "betald"
+                  );
+                }}
+              >
+                Betald
+              </button>
+            </div>
+          );
+        }
+      }
     ];
     const reservations = this.getVisibleOrders();
     return (
@@ -49,7 +121,10 @@ class DisplayReservations extends Component {
         <div className="p-3">
           <div className="row">
             <div className="col">
-              <SearchBox value={searchQuery} onChange={this.handleSearch} />
+              <SearchBox
+                value={searchQuery}
+                onChange={this.handleSearch}
+              />
             </div>
           </div>
         </div>

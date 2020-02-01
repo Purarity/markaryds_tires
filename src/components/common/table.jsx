@@ -9,7 +9,11 @@ class Table extends Component {
         <thead>
           <tr>
             {columns.map(column => {
-              return <th key={column.path || column.key}>{column.label}</th>;
+              return (
+                <th key={column.path || column.key}>
+                  {column.label}
+                </th>
+              );
             })}
           </tr>
         </thead>
@@ -50,18 +54,24 @@ class Table extends Component {
                 {this.props.noLinks ? (
                   item.name
                 ) : (
-                  <Link to={`/product/${item.id}`}>{item.name}</Link>
+                  <Link to={`/product/${item.id}`}>
+                    {item.name}
+                  </Link>
                 )}
               </td>
             );
           } else if (column.key) {
             return (
-              <td key={(column.path || column.key) + item._id}>
-                {column.handleObjectProperty(item)}
+              <td
+                key={(column.path || column.key) + item._id}
+              >
+                {column.renderObjectProperty(item)}
               </td>
             );
           } else {
-            return <td key={column.path}>{item[column.path]}</td>;
+            return (
+              <td key={column.path}>{item[column.path]}</td>
+            );
           }
         })}
       </tr>

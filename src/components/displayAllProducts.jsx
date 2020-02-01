@@ -43,7 +43,10 @@ class DisplayAllProducts extends Component {
   };
 
   handleSearch = searchQuery => {
-    this.setState({ searchQuery, selectedGroup: "All Prices" });
+    this.setState({
+      searchQuery,
+      selectedGroup: "All Prices"
+    });
   };
 
   handleGroupSelect = group => {
@@ -59,7 +62,9 @@ class DisplayAllProducts extends Component {
     let displayedProducts;
     if (searchQuery) {
       displayedProducts = data.filter(product =>
-        product.name.toLowerCase().includes(searchQuery.toLowerCase())
+        product.name
+          .toLowerCase()
+          .includes(searchQuery.toLowerCase())
       );
     } else {
       switch (selectedGroup) {
@@ -101,7 +106,11 @@ class DisplayAllProducts extends Component {
   };
 
   render() {
-    const { searchQuery, priceGroups, selectedGroup } = this.state;
+    const {
+      searchQuery,
+      priceGroups,
+      selectedGroup
+    } = this.state;
     const productsColumns = [
       { path: "img", label: "Image" },
       { path: "name", label: "Name" },
@@ -110,7 +119,7 @@ class DisplayAllProducts extends Component {
       { path: "stock", label: "Stock" },
       {
         key: "delete",
-        handleObjectProperty: item => (
+        renderObjectProperty: item => (
           <button
             type="button"
             className="btn btn-danger"
@@ -126,11 +135,17 @@ class DisplayAllProducts extends Component {
       <React.Fragment>
         <div className="p-3">
           <div className="row">
-            <Link to="/product/new" className="btn btn-primary">
+            <Link
+              to="/product/new"
+              className="btn btn-primary"
+            >
               New Product
             </Link>
             <div className="col">
-              <SearchBox value={searchQuery} onChange={this.handleSearch} />
+              <SearchBox
+                value={searchQuery}
+                onChange={this.handleSearch}
+              />
             </div>
           </div>
           <div>

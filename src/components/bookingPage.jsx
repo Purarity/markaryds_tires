@@ -1,7 +1,10 @@
 import React from "react";
 import Joi from "joi-browser";
 import Form from "./common/form";
-import { getProduct, saveReservation } from "../api/fakeApi";
+import {
+  getProduct,
+  saveReservation
+} from "../api/fakeApi";
 
 class BookingPage extends Form {
   state = {
@@ -77,18 +80,21 @@ class BookingPage extends Form {
   };
 
   render() {
-    const id = this.props.match.params.id;
     const { data } = this.state;
     return (
       <React.Fragment>
-        <h1>Product Form</h1>
-        <div>Product Name: {data.name} </div>
-        <div>Product Descriptions: {data.description} </div>
-        <div>Product Stock: {data.stock} </div>
-        <div>Product Price: {data.price} </div>
-        {this.renderInput("shopperName", "Name:")}
-        {this.renderInput("notes", "Notes to workshop:")}
-        {this.renderButton("Order", this.doSubmit)}
+        <form onSubmit={this.handleSubmit}>
+          <h1>Product Form</h1>
+          <div>Product Name: {data.name} </div>
+          <div>
+            Product Descriptions: {data.description}{" "}
+          </div>
+          <div>Product Stock: {data.stock} </div>
+          <div>Product Price: {data.price} </div>
+          {this.renderInput("shopperName", "Name:")}
+          {this.renderInput("notes", "Notes to workshop:")}
+          {this.renderButton("Order")}
+        </form>
       </React.Fragment>
     );
   }

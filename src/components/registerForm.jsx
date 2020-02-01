@@ -1,22 +1,34 @@
 import React from "react";
 import Joi from "joi-browser";
 import Form from "./common/form";
+import { register } from "../api/authService";
 
 class LoginForm extends Form {
   state = {
     data: {
-      username: "",
+      email: "",
       password: "",
+      telephoneNumber: "",
+      address: "",
       name: ""
     },
     errors: {}
   };
 
   schema = {
-    username: Joi.string()
+    email: Joi.string()
       .email()
       .required()
-      .label("Username"),
+      .min(3)
+      .label("Email"),
+    telephoneNumber: Joi.string()
+      .required()
+      .min(9)
+      .label("Telephone Number"),
+    address: Joi.string()
+      .required()
+      .min(9)
+      .label("Address"),
     password: Joi.string()
       .required()
       .min(5)
@@ -27,18 +39,23 @@ class LoginForm extends Form {
   };
 
   doSubmit = () => {
-    //call the server
-    console.log("submitted");
+    register(this.state.data);
+    return this.props.history.push("/");
   };
 
   render() {
     return (
       <React.Fragment>
         <form onSubmit={this.handleSubmit}>
-          {this.renderInput("username", "Username")}
-          {this.renderInput("password", "Password")}
           {this.renderInput("name", "Name")}
-          {this.renderButton("Register")}
+          {this.renderInput("email", "Email")}
+          {this.renderInput("password", "Password")}
+          {this.renderInput(
+            "telephoneNumber",
+            "Telephone Number"
+          )}
+          {this.renderInput("address", "Address")}
+          {this.renderButton("Register", "auth")}
         </form>
       </React.Fragment>
     );

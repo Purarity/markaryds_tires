@@ -11,7 +11,11 @@ class Form extends Component {
 
   validate = () => {
     const options = { abortEarly: false };
-    const { error } = Joi.validate(this.state.data, this.schema, options);
+    const { error } = Joi.validate(
+      this.state.data,
+      this.schema,
+      options
+    );
     if (!error) {
       return null;
     }
@@ -41,7 +45,9 @@ class Form extends Component {
 
   handleChange = ({ currentTarget: currentInputField }) => {
     const errors = { ...this.state.errors };
-    const errorMessage = this.validateProperty(currentInputField);
+    const errorMessage = this.validateProperty(
+      currentInputField
+    );
     if (errorMessage) {
       errors[currentInputField.id] = errorMessage;
     } else {
@@ -52,15 +58,23 @@ class Form extends Component {
     this.setState({ data, errors });
   };
 
-  renderButton = (label, onClick) => {
+  renderButton = (label, validatePath, onClick) => {
+    const { errors } = this.state;
     return (
-      <button
-        disabled={this.validate()}
-        onClick={onClick}
-        className="btn btn-primary"
-      >
-        {label}
-      </button>
+      <div>
+        <button
+          disabled={this.validate()}
+          onClick={onClick}
+          className="btn btn-primary"
+        >
+          {label}
+        </button>
+        {errors[validatePath] && (
+          <div className="alert alert-danger">
+            {errors[validatePath]}
+          </div>
+        )}
+      </div>
     );
   };
 

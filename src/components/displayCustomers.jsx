@@ -14,7 +14,10 @@ class DisplayCustomers extends Component {
   }
 
   handleSearch = searchQuery => {
-    this.setState({ searchQuery, selectedGroup: "All Prices" });
+    this.setState({
+      searchQuery,
+      selectedGroup: "All Prices"
+    });
   };
 
   getVisibleCustomers = () => {
@@ -22,7 +25,9 @@ class DisplayCustomers extends Component {
     let displayedCustomers;
     if (searchQuery) {
       displayedCustomers = data.filter(product =>
-        product.name.toLowerCase().includes(searchQuery.toLowerCase())
+        product.name
+          .toLowerCase()
+          .includes(searchQuery.toLowerCase())
       );
     } else {
       displayedCustomers = data;
@@ -36,7 +41,10 @@ class DisplayCustomers extends Component {
       { path: "id", label: "#" },
       { path: "name", label: "Name" },
       { path: "email", label: "Email" },
-      { path: "telephoneNumber", label: "Telephone Number" },
+      {
+        path: "telephoneNumber",
+        label: "Telephone Number"
+      },
       { path: "address", label: "Address" }
     ];
     const products = this.getVisibleCustomers();
@@ -45,7 +53,10 @@ class DisplayCustomers extends Component {
         <div className="p-3">
           <div className="row">
             <div className="col">
-              <SearchBox value={searchQuery} onChange={this.handleSearch} />
+              <SearchBox
+                value={searchQuery}
+                onChange={this.handleSearch}
+              />
             </div>
           </div>
         </div>

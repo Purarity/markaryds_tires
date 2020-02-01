@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { getTiresList, deleteItem } from "../api/fakeApi";
+import { getTiresList } from "../api/fakeApi";
 import Table from "./common/table";
 import SearchBox from "./common/searchBox";
 import ListGroup from "./common/listGroup";
@@ -26,7 +26,10 @@ class Shop extends Component {
   }
 
   handleSearch = searchQuery => {
-    this.setState({ searchQuery, selectedGroup: "All Prices" });
+    this.setState({
+      searchQuery,
+      selectedGroup: "All Prices"
+    });
   };
 
   handleGroupSelect = group => {
@@ -42,7 +45,9 @@ class Shop extends Component {
     let displayedProducts;
     if (searchQuery) {
       displayedProducts = data.filter(product =>
-        product.name.toLowerCase().includes(searchQuery.toLowerCase())
+        product.name
+          .toLowerCase()
+          .includes(searchQuery.toLowerCase())
       );
     } else {
       switch (selectedGroup) {
@@ -84,7 +89,12 @@ class Shop extends Component {
 
   handleBook = itemId => {};
   render() {
-    const { searchQuery, priceGroups, selectedGroup } = this.state;
+    const {
+      searchQuery,
+      priceGroups,
+      selectedGroup
+    } = this.state;
+
     const productsColumns = [
       { path: "img", label: "Image" },
       { path: "name", label: "Name" },
@@ -93,22 +103,28 @@ class Shop extends Component {
       { path: "stock", label: "Stock" },
       {
         key: "book",
-        handleObjectProperty: item => (
-          <button
-            type="button"
-            className="btn btn-primary"
-            onClick={() => this.handleBook(item.id)}
-          >
-            <Link to={`/shop/${item.id}`}>Book</Link>
-          </button>
+        renderObjectProperty: item => (
+          <Link to={`/shop/${item.id}`}>
+            <button
+              type="button"
+              className="btn btn-primary"
+            >
+              Book
+            </button>
+          </Link>
         )
       }
     ];
+
     const products = this.getVisibleProducts();
+
     return (
       <React.Fragment>
         <div className="p-3">
-          <SearchBox value={searchQuery} onChange={this.handleSearch} />
+          <SearchBox
+            value={searchQuery}
+            onChange={this.handleSearch}
+          />
           <div>
             <div className="pt-2" align="left">
               <div className="row">
