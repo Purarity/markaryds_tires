@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import _ from "lodash";
 import { getCustomersList } from "../api/fakeApi";
 import Table from "./common/table";
 import SearchBox from "./common/searchBox";
@@ -6,7 +7,8 @@ import SearchBox from "./common/searchBox";
 class DisplayCustomers extends Component {
   state = {
     data: [],
-    searchQuery: ""
+    searchQuery: "",
+    sortColumn: { column: "name", order: "asc" }
   };
 
   componentDidMount() {
@@ -20,8 +22,12 @@ class DisplayCustomers extends Component {
     });
   };
 
+  handleSort = sortColumn => {
+    this.setState({ sortColumn });
+  };
+
   getVisibleCustomers = () => {
-    const { data, searchQuery } = this.state;
+    const { data, searchQuery, sortColumn } = this.state;
     let displayedCustomers;
     if (searchQuery) {
       displayedCustomers = data.filter(product =>
@@ -32,11 +38,17 @@ class DisplayCustomers extends Component {
     } else {
       displayedCustomers = data;
     }
-    return displayedCustomers;
+    const sortedItems = _.orderBy(
+      displayedCustomers,
+      [sortColumn.column],
+      sortColumn.order
+    );
+
+    return sortedItems;
   };
 
   render() {
-    const { searchQuery } = this.state;
+    const { searchQuery, sortColumn } = this.state;
     const productsColumns = [
       { path: "id", label: "#" },
       { path: "name", label: "Name" },
@@ -62,7 +74,9 @@ class DisplayCustomers extends Component {
         </div>
         <Table
           noLinks={true}
+          sortColumn={sortColumn}
           columns={productsColumns}
+          onSort={this.handleSort}
           data={products}
           onDelete={this.handleDelete}
         ></Table>

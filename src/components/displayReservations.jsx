@@ -10,7 +10,8 @@ import SearchBox from "./common/searchBox";
 class DisplayReservations extends Component {
   state = {
     data: [],
-    searchQuery: ""
+    searchQuery: "",
+    sortColumn: { column: "name", order: "asc" }
   };
 
   componentDidMount() {
@@ -24,13 +25,16 @@ class DisplayReservations extends Component {
 
   handleSearch = searchQuery => {
     this.setState({
-      searchQuery,
-      selectedGroup: "All Prices"
+      searchQuery
     });
   };
 
+  handleSort = sortColumn => {
+    this.setState({ sortColumn });
+  };
+
   getVisibleOrders = () => {
-    const { data, searchQuery } = this.state;
+    const { data, searchQuery, sortColumn } = this.state;
     let displayedOrders;
     if (searchQuery) {
       displayedOrders = data.filter(product =>
@@ -41,7 +45,14 @@ class DisplayReservations extends Component {
     } else {
       displayedOrders = data;
     }
-    return displayedOrders;
+
+    const sortedOrders = _.orderBy(
+      displayedOrders,
+      [sortColumn.column],
+      sortColumn.order
+    );
+
+    return sortedOrders;
   };
 
   handleBetalningButton = (id, property) => {
@@ -61,7 +72,9 @@ class DisplayReservations extends Component {
   };
 
   render() {
-    const { searchQuery } = this.state;
+    const { searchQuery, sortColumn } = this.state;
+    const reservations = this.getVisibleOrders();
+
     const productsColumns = [
       { path: "id", label: "#" },
       { path: "name", label: "Name" },
@@ -115,7 +128,7 @@ class DisplayReservations extends Component {
         }
       }
     ];
-    const reservations = this.getVisibleOrders();
+
     return (
       <React.Fragment>
         <div className="p-3">
@@ -132,6 +145,8 @@ class DisplayReservations extends Component {
           noLinks={true}
           columns={productsColumns}
           data={reservations}
+          sortColumn={sortColumn}
+          onSort={this.handleSort}
           onDelete={this.handleDelete}
         ></Table>
       </React.Fragment>
