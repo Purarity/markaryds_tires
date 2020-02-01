@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { getTiresList, deleteItem } from "../api/fakeApi";
+import _ from "lodash";
 import Table from "./common/table";
 import SearchBox from "./common/searchBox";
 import ListGroup from "./common/listGroup";
@@ -13,6 +14,7 @@ class DisplayAllProducts extends Component {
     searchQuery: "",
     priceGroups: [],
     selectedGroup: "All Prices",
+    sortColumn: { column: "name", order: "asc" },
     pageSize: 3,
     currentPage: 1
   };
@@ -66,13 +68,18 @@ class DisplayAllProducts extends Component {
     this.setState({ currentPage: page });
   };
 
+  handleSort = sortColumn => {
+    this.setState({ sortColumn });
+  };
+
   getVisibleProducts = () => {
     const {
       data,
       searchQuery,
       selectedGroup,
       currentPage,
-      pageSize
+      pageSize,
+      sortColumn
     } = this.state;
 
     let filteredItems;
@@ -119,13 +126,19 @@ class DisplayAllProducts extends Component {
       }
     }
 
+    const sortedItems = _.orderBy(
+      filteredItems,
+      [sortColumn.column],
+      sortColumn.order
+    );
+
     return {
       count: filteredItems.length,
-      filteredItems: (filteredItems = paginate(
-        filteredItems,
+      visibleItems: paginate(
+        sortedItems,
         currentPage,
         pageSize
-      ))
+      )
     };
   };
 
@@ -135,11 +148,12 @@ class DisplayAllProducts extends Component {
       priceGroups,
       selectedGroup,
       pageSize,
-      currentPage
+      currentPage,
+      sortColumn
     } = this.state;
 
     const {
-      filteredItems,
+      visibleItems,
       count
     } = this.getVisibleProducts();
 
@@ -193,7 +207,9 @@ class DisplayAllProducts extends Component {
         </div>
         <Table
           columns={productsColumns}
-          data={filteredItems}
+          sortColumn={sortColumn}
+          onSort={this.handleSort}
+          data={visibleItems}
           onDelete={this.handleDelete}
         ></Table>
         <Pagination

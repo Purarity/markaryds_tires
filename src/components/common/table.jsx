@@ -2,16 +2,48 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 
 class Table extends Component {
+  sortIconClassNames = (sortColumn, currentColumn) => {
+    let sortClassName = "fas fa-caret-";
+    if (sortColumn.column === currentColumn.path) {
+      sortClassName +=
+        sortColumn.order === "asc" ? "down" : "up";
+    }
+    return sortClassName;
+  };
+
+  raiseSort = column => {
+    const { sortColumn, onSort } = this.props;
+    if (sortColumn.column === column) {
+      sortColumn.order =
+        sortColumn.order === "asc" ? "desc" : "asc";
+    } else {
+      sortColumn.column = column;
+      sortColumn.order = "asc";
+    }
+    onSort(sortColumn);
+  };
+
   render() {
-    const { data, columns } = this.props;
+    const { data, columns, sortColumn } = this.props;
     return (
       <table className="table">
         <thead>
           <tr>
             {columns.map(column => {
               return (
-                <th key={column.path || column.key}>
+                <th
+                  key={column.path || column.key}
+                  onClick={() =>
+                    this.raiseSort(column.path)
+                  }
+                >
                   {column.label}
+                  <i
+                    className={this.sortIconClassNames(
+                      sortColumn,
+                      column
+                    )}
+                  />
                 </th>
               );
             })}

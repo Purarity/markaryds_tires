@@ -1,18 +1,20 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { getTiresList } from "../api/fakeApi";
+import { getTiresList, deleteItem } from "../api/fakeApi";
+import _ from "lodash";
 import Table from "./common/table";
 import SearchBox from "./common/searchBox";
 import ListGroup from "./common/listGroup";
 import Pagination from "./common/pagination";
 import paginate from "./utils/paginate";
 
-class Shop extends Component {
+class DisplayAllProducts extends Component {
   state = {
     data: [],
     searchQuery: "",
     priceGroups: [],
     selectedGroup: "All Prices",
+    sortColumn: { column: "name", order: "asc" },
     pageSize: 3,
     currentPage: 1
   };
@@ -29,10 +31,28 @@ class Shop extends Component {
     this.setState({ data: getTiresList(), priceGroups });
   }
 
+  handleDelete = productId => {
+    const updatedList = deleteItem(productId);
+    this.setState({ data: updatedList });
+  };
+
+  deleteButton = itemId => {
+    return (
+      <button
+        type="button"
+        className="btn btn-danger"
+        onClick={() => this.handleDelete(itemId)}
+      >
+        Delete
+      </button>
+    );
+  };
+
   handleSearch = searchQuery => {
     this.setState({
       searchQuery,
-      selectedGroup: "All Prices"
+      selectedGroup: "All Prices",
+      currentPage: 1
     });
   };
 
@@ -48,13 +68,18 @@ class Shop extends Component {
     this.setState({ currentPage: page });
   };
 
+  handleSort = sortColumn => {
+    this.setState({ sortColumn });
+  };
+
   getVisibleProducts = () => {
     const {
       data,
       searchQuery,
       selectedGroup,
       currentPage,
-      pageSize
+      pageSize,
+      sortColumn
     } = this.state;
 
     let filteredItems;
@@ -101,28 +126,34 @@ class Shop extends Component {
       }
     }
 
+    const sortedItems = _.orderBy(
+      filteredItems,
+      [sortColumn.column],
+      sortColumn.order
+    );
+
     return {
       count: filteredItems.length,
-      filteredItems: (filteredItems = paginate(
-        filteredItems,
+      visibleItems: paginate(
+        sortedItems,
         currentPage,
         pageSize
-      ))
+      )
     };
   };
 
-  handleBook = itemId => {};
   render() {
     const {
       searchQuery,
       priceGroups,
       selectedGroup,
       pageSize,
-      currentPage
+      currentPage,
+      sortColumn
     } = this.state;
 
     const {
-      filteredItems,
+      visibleItems,
       count
     } = this.getVisibleProducts();
 
@@ -146,6 +177,7 @@ class Shop extends Component {
         )
       }
     ];
+
     return (
       <React.Fragment>
         <div className="p-3">
@@ -177,7 +209,9 @@ class Shop extends Component {
         </div>
         <Table
           columns={productsColumns}
-          data={filteredItems}
+          sortColumn={sortColumn}
+          onSort={this.handleSort}
+          data={visibleItems}
           onDelete={this.handleDelete}
         ></Table>
         <Pagination
@@ -191,4 +225,4 @@ class Shop extends Component {
   }
 }
 
-export default Shop;
+export default DisplayAllProducts;
