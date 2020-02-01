@@ -63,7 +63,7 @@ let customers = [
     name: "Aladin El-Khalil",
     email: "aladin@gmail.com",
     password: "aladin@gmail.com",
-    telephoneNumber: "076-288 65 75",
+    telephoneNumber: "0278-410 44 47",
     address: "Tellusgatan 81, 254 72 Ödåkra"
   },
   {
@@ -71,7 +71,7 @@ let customers = [
     name: "Hussein Saad	",
     email: "HusseinS@gmail.com",
     password: "HusseinS@gmail.com",
-    telephoneNumber: "070-726 08 33‬",
+    telephoneNumber: "0970-663 40 59‬",
     address: "Englandsvägen 8, 285 36 Markaryd"
   },
   {
@@ -79,7 +79,7 @@ let customers = [
     name: "Emelie Salomonsson",
     email: "Emelie@gmail.com",
     password: "Emelie@gmail.com",
-    telephoneNumber: "‭070-494 99 41‬",
+    telephoneNumber: "0481-110 56 09‬",
     address: "Norrlandsvägen 49, 661 40 Säffle"
   },
   {
@@ -87,7 +87,7 @@ let customers = [
     name: "Hussein Chahin",
     email: "Hussein@gmail.com",
     password: "Hussein@gmail.com",
-    telephoneNumber: "070-723 93 84‬",
+    telephoneNumber: "0456-141 00 43‬",
     address: "Tuthult 1554, 285 91 Markaryd"
   }
 ];
