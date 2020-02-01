@@ -4,13 +4,17 @@ import { getTiresList } from "../api/fakeApi";
 import Table from "./common/table";
 import SearchBox from "./common/searchBox";
 import ListGroup from "./common/listGroup";
+import Pagination from "./common/pagination";
+import paginate from "./utils/paginate";
 
 class Shop extends Component {
   state = {
     data: [],
     searchQuery: "",
     priceGroups: [],
-    selectedGroup: "All Prices"
+    selectedGroup: "All Prices",
+    pageSize: 3,
+    currentPage: 1
   };
 
   componentDidMount() {
@@ -40,11 +44,23 @@ class Shop extends Component {
     });
   };
 
+  handlePageChange = page => {
+    this.setState({ currentPage: page });
+  };
+
   getVisibleProducts = () => {
-    const { data, searchQuery, selectedGroup } = this.state;
-    let displayedProducts;
+    const {
+      data,
+      searchQuery,
+      selectedGroup,
+      currentPage,
+      pageSize
+    } = this.state;
+
+    let filteredItems;
+
     if (searchQuery) {
-      displayedProducts = data.filter(product =>
+      filteredItems = data.filter(product =>
         product.name
           .toLowerCase()
           .includes(searchQuery.toLowerCase())
@@ -53,38 +69,46 @@ class Shop extends Component {
       switch (selectedGroup) {
         //#region filter prices
         case "500-600":
-          displayedProducts = data.filter(
+          filteredItems = data.filter(
             item => item.price >= 500 && item.price < 600
           );
           break;
         case "601-700":
-          displayedProducts = data.filter(
+          filteredItems = data.filter(
             item => item.price >= 601 && item.price < 700
           );
           break;
         case "701-800":
-          displayedProducts = data.filter(
+          filteredItems = data.filter(
             item => item.price >= 701 && item.price <= 800
           );
           break;
         case "801-900":
-          displayedProducts = data.filter(
+          filteredItems = data.filter(
             item => item.price >= 801 && item.price <= 900
           );
           break;
         case "901-1000":
-          displayedProducts = data.filter(
+          filteredItems = data.filter(
             item => item.price >= 901 && item.price <= 1000
           );
           break;
 
         default:
-          displayedProducts = data;
+          filteredItems = data;
           break;
         //#endregion
       }
     }
-    return displayedProducts;
+
+    return {
+      count: filteredItems.length,
+      filteredItems: (filteredItems = paginate(
+        filteredItems,
+        currentPage,
+        pageSize
+      ))
+    };
   };
 
   handleBook = itemId => {};
@@ -92,8 +116,15 @@ class Shop extends Component {
     const {
       searchQuery,
       priceGroups,
-      selectedGroup
+      selectedGroup,
+      pageSize,
+      currentPage
     } = this.state;
+
+    const {
+      filteredItems,
+      count
+    } = this.getVisibleProducts();
 
     const productsColumns = [
       { path: "img", label: "Image" },
@@ -115,16 +146,23 @@ class Shop extends Component {
         )
       }
     ];
-
-    const products = this.getVisibleProducts();
-
     return (
       <React.Fragment>
         <div className="p-3">
-          <SearchBox
-            value={searchQuery}
-            onChange={this.handleSearch}
-          />
+          <div className="row">
+            <Link
+              to="/product/new"
+              className="btn btn-primary"
+            >
+              New Product
+            </Link>
+            <div className="col">
+              <SearchBox
+                value={searchQuery}
+                onChange={this.handleSearch}
+              />
+            </div>
+          </div>
           <div>
             <div className="pt-2" align="left">
               <div className="row">
@@ -138,11 +176,16 @@ class Shop extends Component {
           </div>
         </div>
         <Table
-          noLinks={true}
           columns={productsColumns}
-          data={products}
+          data={filteredItems}
           onDelete={this.handleDelete}
         ></Table>
+        <Pagination
+          pageSize={pageSize}
+          currentPage={currentPage}
+          itemsCount={count}
+          onPageChange={this.handlePageChange}
+        />
       </React.Fragment>
     );
   }

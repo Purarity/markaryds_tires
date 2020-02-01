@@ -43,7 +43,7 @@ let tires = [
     id: "4acb99aa-855c-40d1-83fb-f23a85107f71",
     name: "DUNLOP",
     description: "fff",
-    price: 500,
+    price: 680,
     stock: 42,
     imgId: "6"
   },
@@ -51,7 +51,7 @@ let tires = [
     id: "056189b0-76a1-4ead-9d89-4f636c58fad7",
     name: "BFGOODRICH",
     description: "ggg",
-    price: 550,
+    price: 690,
     stock: 45,
     imgId: "7"
   }
@@ -64,7 +64,7 @@ let customers = [
     email: "aladin@gmail.com",
     password: "aladin@gmail.com",
     telephoneNumber: "0278-410 44 47",
-    address: "Tellusgatan 81, 254 72 Ödåkra"
+    address: "Storgränd 6 868 62 Storebro"
   },
   {
     id: "2",
@@ -72,7 +72,7 @@ let customers = [
     email: "HusseinS@gmail.com",
     password: "HusseinS@gmail.com",
     telephoneNumber: "0970-663 40 59‬",
-    address: "Englandsvägen 8, 285 36 Markaryd"
+    address: "Mattssonstigen 94Y 453 68 Njurundabommen"
   },
   {
     id: "3",
@@ -80,7 +80,7 @@ let customers = [
     email: "Emelie@gmail.com",
     password: "Emelie@gmail.com",
     telephoneNumber: "0481-110 56 09‬",
-    address: "Norrlandsvägen 49, 661 40 Säffle"
+    address: "Larsvägen 79O 492 58 Hjärnarp"
   },
   {
     id: "4",
@@ -88,7 +88,7 @@ let customers = [
     email: "Hussein@gmail.com",
     password: "Hussein@gmail.com",
     telephoneNumber: "0456-141 00 43‬",
-    address: "Tuthult 1554, 285 91 Markaryd"
+    address: "Lindberg Allé 76 53882 Torhamn"
   }
 ];
 
